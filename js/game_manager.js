@@ -14,6 +14,14 @@ function GameManager(size, InputManager, Actuator, ScoreManager) {
   TogetherJS.on("ready", function () {
     self.setMaster(TogetherJS.startup.reason !== "joined");
   });
+  TogetherJS.on("close", function () {
+    var wasMaster = self.master;
+    self.setMaster(true);
+    if (!wasMaster) {
+      // no game stealing
+      self.setup();
+    }
+  });
   TogetherJS.hub.on("togetherjs.hello", function (msg) {
     if (!msg.sameUrl) return;
     self.broadcastActuate();
