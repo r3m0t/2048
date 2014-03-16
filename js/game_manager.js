@@ -33,6 +33,7 @@ function GameManager(size, InputManager, Actuator, ScoreManager) {
     self.score = msg.score;
     self.over = msg.over;
     self.won = msg.won;
+    self.actuator.continue();
     self.actuate();
   });
   TogetherJS.hub.on("continue", function (msg) {
