@@ -16,7 +16,7 @@ function GameManager(size, InputManager, Actuator, ScoreManager) {
   });
   TogetherJS.hub.on("togetherjs.hello", function (msg) {
     if (!msg.sameUrl) return;
-    if (self.master) self.actuate();
+    self.broadcastActuate();
   });
   TogetherJS.hub.on("actuate", function (msg) {
     self.setMaster(false);
@@ -98,18 +98,22 @@ GameManager.prototype.broadcast = function (msg) {
   }
 };
 
-// Sends the updated grid to the actuator
-GameManager.prototype.actuate = function () {
-  if (this.scoreManager.get() < this.score) {
-    this.scoreManager.set(this.score);
-  }
-
+GameManager.prototype.broadcastActuate = function () {
   this.broadcast({type: "actuate", grid: this.grid,
     score:      this.score,
     over:       this.over,
     won:        this.won,
     keepPlaying:this.keepPlaying
   });
+};
+
+// Sends the updated grid to the actuator
+GameManager.prototype.actuate = function () {
+  if (this.scoreManager.get() < this.score) {
+    this.scoreManager.set(this.score);
+  }
+
+  this.broadcastActuate();
 
   this.actuator.actuate(this.grid, {
     score:      this.score,
