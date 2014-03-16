@@ -48,7 +48,8 @@ KeyboardInputManager.prototype.listen = function () {
                     event.shiftKey;
     var mapped    = map[event.which];
 
-    if (!self.active) {
+    var chatting = document.querySelectorAll("#togetherjs-chat-input:focus").length;
+    if (!self.active || chatting) {
       return;
     }
 
