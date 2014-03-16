@@ -259,6 +259,7 @@ GameManager.prototype.movesAvailable = function () {
 
 GameManager.prototype.setMaster = function (master) {
   // TODO inputManager
+  this.inputManager.setActive(master);
   this.master = master;
 };
 

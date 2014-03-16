@@ -1,8 +1,13 @@
 function KeyboardInputManager() {
   this.events = {};
+  this.active = true;
 
   this.listen();
 }
+
+KeyboardInputManager.prototype.setActive = function (active) {
+  this.active = active;
+};
 
 KeyboardInputManager.prototype.on = function (event, callback) {
   if (!this.events[event]) {
@@ -42,6 +47,10 @@ KeyboardInputManager.prototype.listen = function () {
     var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
                     event.shiftKey;
     var mapped    = map[event.which];
+
+    if (!self.active) {
+      return;
+    }
 
     if (!modifiers) {
       if (mapped !== undefined) {
