@@ -58,13 +58,15 @@ KeyboardInputManager.prototype.listen = function () {
         self.emit("move", mapped);
       }
 
-      if (event.which === 32) self.restart.bind(self)(event);
     }
   });
 
   var retry = document.querySelector(".retry-button");
   retry.addEventListener("click", this.restart.bind(this));
   retry.addEventListener("touchend", this.restart.bind(this));
+  var restart = document.querySelector(".restart-button");
+  restart.addEventListener("click", this.restart.bind(this));
+  restart.addEventListener("touchend", this.restart.bind(this));
 
   var keepPlaying = document.querySelector(".keep-playing-button");
   keepPlaying.addEventListener("click", this.keepPlaying.bind(this));
