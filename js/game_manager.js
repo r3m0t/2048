@@ -1,26 +1,46 @@
 function GameManager(size, InputManager, Actuator, ScoreManager) {
+  var self = this;
   this.size         = size; // Size of the grid
   this.inputManager = new InputManager;
   this.scoreManager = new ScoreManager;
   this.actuator     = new Actuator;
+  this.master      = true;
 
   this.startTiles   = 2;
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
+  TogetherJS.on("ready", function () {
+    self.master = TogetherJS.startup.reason !== "joined";
+  });
+  TogetherJS.hub.on("togetherjs.hello", function (msg) {
+    if (!msg.sameUrl) return;
+    if (self.master) self.actuate();
+  });
+  TogetherJS.hub.on("actuate", function (msg) {
+    self.master = false;
+    self.keepPlaying = msg.keepPlaying;
+    self.grid = msg.grid;
+    self.score = msg.score;
+    self.over = msg.over;
+    self.won = msg.won;
+    self.actuate();
+  });
 
   this.setup();
 }
 
 // Restart the game
 GameManager.prototype.restart = function () {
+  if (!this.master) return;
   this.actuator.continue();
   this.setup();
 };
 
 // Keep playing after winning
 GameManager.prototype.keepPlaying = function () {
+  if (!this.master) return;
   this.keepPlaying = true;
   this.actuator.continue();
 };
@@ -72,10 +92,20 @@ GameManager.prototype.actuate = function () {
     this.scoreManager.set(this.score);
   }
 
+  if (TogetherJS.running && this.master) {
+    TogetherJS.send({type: "actuate", grid: this.grid,
+      score:      this.score,
+      over:       this.over,
+      won:        this.won,
+      keepPlaying:this.keepPlaying
+    });
+  }
+
   this.actuator.actuate(this.grid, {
     score:      this.score,
     over:       this.over,
     won:        this.won,
+    playing:    this.master,
     bestScore:  this.scoreManager.get(),
     terminated: this.isGameTerminated()
   });
@@ -105,6 +135,7 @@ GameManager.prototype.move = function (direction) {
   var self = this;
 
   if (this.isGameTerminated()) return; // Don't do anything if the game's over
+  if (!this.master) return;
 
   var cell, tile;
 

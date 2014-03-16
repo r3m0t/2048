@@ -12,13 +12,13 @@
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
-<script src="https://togetherjs.com/togetherjs-min.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="heading">
       <h1 class="title">2048</h1>
       <div class="scores-container">
+	<div class="playing-container">Playing</div>
         <div class="score-container">0</div>
         <div class="best-container">0</div>
       </div>
@@ -78,6 +78,7 @@
     </p>
   </div>
 
+  <script src="https://togetherjs.com/togetherjs-min.js"></script>
   <script src="js/animframe_polyfill.js"></script>
   <script src="js/keyboard_input_manager.js"></script>
   <script src="js/html_actuator.js"></script>

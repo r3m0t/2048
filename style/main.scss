@@ -65,7 +65,7 @@ h1.title {
   text-align: right;
 }
 
-.score-container, .best-container {
+.playing-container, .score-container, .best-container {
   $height: 25px;
 
   position: relative;
@@ -105,6 +105,10 @@ h1.title {
     @include animation(move-up 600ms ease-in);
     @include animation-fill-mode(both);
   }
+}
+
+.playing-container:after {
+  content: "Status";
 }
 
 .score-container:after {

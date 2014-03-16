@@ -3,9 +3,15 @@ function HTMLActuator() {
   this.scoreContainer   = document.querySelector(".score-container");
   this.bestContainer    = document.querySelector(".best-container");
   this.messageContainer = document.querySelector(".game-message");
+  this.playingContainer = document.querySelector(".playing-container");
 
   this.score = 0;
 }
+
+HTMLActuator.prototype.actuateMsg = function (msg) {
+  msg.metadata.playing = false;
+  this.actuate(msg.grid, msg.metadata);
+};
 
 HTMLActuator.prototype.actuate = function (grid, metadata) {
   var self = this;
@@ -23,6 +29,7 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
 
     self.updateScore(metadata.score);
     self.updateBestScore(metadata.bestScore);
+    self.updatePlaying(metadata.playing);
 
     if (metadata.terminated) {
       if (metadata.over) {
@@ -122,6 +129,10 @@ HTMLActuator.prototype.updateScore = function (score) {
 
 HTMLActuator.prototype.updateBestScore = function (bestScore) {
   this.bestContainer.textContent = bestScore;
+};
+
+HTMLActuator.prototype.updatePlaying = function (playing) {
+  this.playingContainer.textContent = playing ? "Playing" : "Watching";
 };
 
 HTMLActuator.prototype.message = function (won) {
