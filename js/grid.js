@@ -6,6 +6,15 @@ function Grid(size) {
   this.build();
 }
 
+Grid.prototype.copy = function () {
+  var ret = new Grid(this.size);
+  this.eachCell(function (x, y, tile) {
+    if (tile === null) return;
+    ret.insertTile(tile.copy());
+  });
+  return ret;
+}
+
 // Build a grid of the specified size
 Grid.prototype.build = function () {
   for (var x = 0; x < this.size; x++) {
